@@ -23,6 +23,6 @@ roles:
     dungeon_master: "Almighty DM"
 ```
 
-Danach müssen die in der dependency.py angegebenen Python-Module installiert werden. Ich empfehle pip für diesen Schritt.
+Danach müssen die in der dependencies.py angegebenen Python-Module installiert werden. Ich empfehle pip für diesen Schritt.
 
 Anschließend kann der Bot mit `python3 dmbot.py` gestartet werden.
