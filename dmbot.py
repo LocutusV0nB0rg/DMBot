@@ -10,7 +10,7 @@ import yaml
 with open('bot.yml', 'r') as file:
     config_data = yaml.safe_load(file)
 
-TOKEN = config_data["bot"]["token"]#'MTAwOTQ1MzE0NTA0NDI5NTc3Mw.GqTUlp.rfANEIwuucZIVePSMcaE17mEVa-Z7MoJoyodtY'
+TOKEN = config_data["bot"]["token"]
 
 client = discord.Client()
 
@@ -27,6 +27,9 @@ async def on_ready():
 @client.event
 async def on_message(message):
     if message.author == client.user:
+        return
+
+    if config_data["bot"]["channel"] not in message.channel.name:
         return
 
     if isDungeonMaster(message.author):
