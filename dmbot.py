@@ -4,7 +4,7 @@
 import os
 
 import discord
-
+import random
 import yaml
 
 with open('bot.yml', 'r') as file:
@@ -20,6 +20,53 @@ def isDungeonMaster(member):
             return True
     return False
 
+async def getMessageForMainBotChannel(message):
+    if isDungeonMaster(message.author):
+        response = "Gute Antwort! :)"
+        await message.channel.send(response)
+        return
+
+    if "leben" in message.content.lower() and "universum" in message.content.lower() and "alles in message.content.lower()":
+        response = "42"
+        await message.channel.send(response)
+        return
+
+    if "oder" in message.content.lower():
+        response = "Bitte würfel einen D20?"
+        await message.channel.send(response)
+        return
+
+    if "nicht" in message.content.lower():
+        response = "Das macht 3 Schadenspunkte"
+        await message.channel.send(response)
+        return
+
+    if message.content.isdigit():
+        response = "Das ist nicht des Rätsels Lösung"
+        await message.channel.send(response)
+        return
+
+    if "ich" in message.content.lower():
+        response = "Auf so eine Idee können wirklich nur Spieler kommen"
+        await message.channel.send(response)
+        return
+
+
+    if "?" in message.content:
+        response = "Das ist eine dumme Frage!"
+        await message.channel.send(response)
+    else:
+        response = "Das ist keine Frage..."
+        await message.channel.send(response)
+
+async def getMessageForAllOtherChannels(message):
+    if "dice" in message.content.lower():
+        number= random.randint(1, 20)
+        response = f"```markdown\n# {number}\nDetails:[d20 ({number})]```"
+        await message.channel.send(response)
+        return
+    
+
 @client.event
 async def on_ready():
     print('[D] Bot gestartet')
@@ -29,20 +76,12 @@ async def on_message(message):
     if message.author == client.user:
         return
 
-    if config_data["bot"]["channel"] not in message.channel.name:
-        return
-
-    if isDungeonMaster(message.author):
-        response = "Gute Antwort! :)"
-        await message.channel.send(response)
-        return
-
-    if "?" in message.content:
-        response = "Das ist eine dumme Frage!"
-        await message.channel.send(response)
+    if config_data["bot"]["channel"] in message.channel.name:
+        await getMessageForMainBotChannel(message)
     else:
-        response = "Das ist keine Frage..."
-        await message.channel.send(response)
+        await getMessageForAllOtherChannels(message)
+
+    
 
 @client.event
 async def on_error(event, *args, **kwargs):
