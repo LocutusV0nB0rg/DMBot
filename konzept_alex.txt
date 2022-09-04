@@ -1,0 +1,60 @@
+Anforderungen / Konzept Charakterbogen-Discord-Bot
+
+Der Bot muss die Erfassung und Darstellung von P&P/D&D-typischen Attributen in einem Discord-Server ermöglichen. Dazu gehören:
+Stärke
+Geschicklichkeit
+Konstitution
+Intelligenz
+Weisheit
+Charisma
+Mentality
+Übungsbonus
+
+Zusätzlich soll eine Liste von Skills und sonstigen Specials gepflegt werden können, sowie ein Inventar
+
+Zu den Attributen sollte der Bonus automatisch angezeigt werden können (10 => 0; 11, 12 => 1; 9, 8 => -1; etc.); mit Ausnahme des Übungsbonus, der direkt als Bonus eingetragen wird.
+
+Alle Attribute und Listen-Items sollen sowohl von den Server-Mitgliedern aka Spielern, als auch den Admins verändert und eingesehen werden können.
+Das Ändern der Attribute erfolgt über mathematische Operationen (z.B. +1; -2; etc.)
+Das Ändern von Listen-Items erfolgt über Hinzufügen von Freitext als Zeile der Liste bzw. Löschen einer Zeile durch Angabe der Zeilennummer aka Item-ID. Dazu sollte die Item-ID bei der Anzeige jeweils dabeistehen, um bei längeren Listen die Übersichtlichkeit und Nutzerfreundlichkeit zu erhalten.
+Zudem soll bei den Listen-Items zwischen den beiden genannten Listen - 1. "Skills"; 2. "Inventar" - unterschieden werden können.
+
+Ändern (Modifizieren, Hinzufügen und Löschen) sowie Anzeigen von Attributen und Listen-Items muss über jeweils eigene Befehle erfolgen; dabei sollte die Anzeige der Attribute jeweils einzeln möglich sein, die Listen sollen jeweils als vollständige Liste ausgegeben werden.
+Die Befehle müssen dabei jeweils den Spieler referenzieren; allerdings sollen nur Admins Charakterbögen anderer Spieler bearbeiten/anzeigen lassen können, daher kann ein Default auf den eigenen Charakterbogen des Spielers erfolgen.
+Beispiele für Befehle:
+'!Char -showInv -> zeigt komplettes Inventar
+'!Char -<Name> -STR+2 -> erhöht den Stärkewert des angegebenen Charakters (Spielername) um 2
+'!Char -SklDelete -2 -> löscht den zweiten Eintrag aus dem Skill-Buch des aktuellen Charakters
+
+-----------------------
+Die Befehle sollen dabei möglichst einfach, aber gut strukturiert und zu merken sein; dabei steht im Vordergrund, dass man die Befehle schnell lernen kann, selbst wenn sie dafür etwas länger sind.
+
+Beispiele für die Anzeige:
+
+Spielername: Tragian (Komplette Anzeige über z.B. '!Char -Tragian für Admins oder nur '!Char für den aktuellen Spieler)
+-----
+--- Attribute --- (Anzeige z.B. über '!Char -showATT)
+Stärke: 15 --- Bonus: 2 (Anzeige z.B. über '!Char -STR)
+Geschicklichkeit: 8 --- Bonus: -1 (Anzeige z.B. über '!Char -GES)
+Konstitution: 10 --- Bonus: 0 (Anzeige z.B. über '!Char -KON)
+Intelligenz: 17 --- Bonus: 3 (Anzeige z.B. über '!Char -INT)
+Weisheit: 6 --- Bonus: -2 (Anzeige z.B. über '!Char -WIS)
+Charisma: 11 --- Bonus: 1 (Anzeige z.B. über '!Char -CHA)
+Mentality: 2 --- Bonus: -4 (Anzeige z.B. über '!Char -MTL)
+Übungsbonus: 3 (Anzeige z.B. über '!Char -PRF)
+-----
+--- Skills --- (Anzeige z.B. über '!Char -showSkl)
+1: Schleichen
+2: Lesen
+----
+--- Inventar --- (Anzeige z.B. über '!Char -showInv)
+1: Seil
+2: Kralle einer weißen Krähe aus einem Sturm
+3: Gehirn (nicht das eigene)
+
+Als ergänzende Anforderungen könnte auf die Attribute mit einem D20 gewürfelt werden (z.B. '!Char -roll STR), wobei der im Charakterbogen hinterlegte Bonus direkt auf das Ergebnis angerechnet wird. z.B. '!Char -roll STR (D20 + STR-Bonus).
+Zusätzlich kann dabei das Ergebnis farbig auf besondere Ereignisse hinweisen; z.B. grün bei einer gewürfelten (ohne Einberechnung des Bonus) 20 ("nat20") bzw. rot bei einer 1; als besonderes Feature zusätzliche Abstufungen zwischen Orange, über gelb, lila und blau in 5-er Schritten beim (errechneten) Ergebnis.
+-
+-
+-
+Ihr habt es so gewollt! 🤣  Und ja, das waren jetzt literally 2 Nachrichten, weil ich bei ~3600 Zeichen war 🙈

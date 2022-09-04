@@ -1,0 +1,26 @@
+Hilfe-Nachricht:
+
+Alle Befehle beginnen mit "!char". Argumente werden durch ein " -" getrennt, also z.B. so: "!char -argument1 -argument2 -Ganz langes Argument"
+
+Befehle:
+
+!char | Zeigt die Hilfe an.
+!char -list | Zeigt eine Liste mit allen verfügbaren Characteren an
+!char -create -<Name> | Erstellt einen neuen Character mit zufälligen Attributswerten und dem gegebenen Namen
+!char -<Name> -delete | Löscht den angegeben Character unwiderruflich
+!char -<Name> | Zeigt die vollständige Characterübersicht an
+!char -<Name> -showInv | Zeigt das Inventar dieses Characters an
+!char -<Name> -showSkills | Zeigt die Skill-Liste dieses Characters an
+!char -<Name> -showPractice | Zeigt die Practice Boni dieses Characters an
+!char -<Name> -showAttributes | Zeigt die Attribute dieses Characters an
+!char -<Name> -inventoryadd <Itembeschreibung> | Fügt ein Item in das Inventar des Spielers ein
+!char -<Name> -inventoryremove <Position> | Entfernt das Item an der gegebenen Position 
+!char -<Name> -skilladd <Skillbeschreibung> | Fügt ein Skill zum Character hinzu
+!char -<Name> -skillremove <Position> | Entfernt den Skill an der angegebenen Position
+!char -<Name> -practiceadd <Beschreibung> -<Wert> | Fügt einen Übungsbonus zum Character hinzu
+!char -<Name> -practiceremove <Position> | Entfernt einen Übungsbonus wieder
+
+Charaktereigenschaften können mit "!char -<Name> <Kürzel>+-<Wert>" verändert werden, z.B.:
+!char -Tobey -STR+2 (Erhöht Stärke um 2)
+!char -Tobey -MTL-1 (Verringert Mentality um 1)
+Die Kürzel sind in den Characterübersichten aufgeführt.

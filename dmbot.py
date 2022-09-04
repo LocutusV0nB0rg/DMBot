@@ -7,6 +7,10 @@ import discord
 import random
 import yaml
 
+import traceback as tb
+
+from character import *
+
 with open('bot.yml', 'r') as file:
     config_data = yaml.safe_load(file)
 
@@ -26,7 +30,7 @@ async def getMessageForMainBotChannel(message):
         await message.channel.send(response)
         return
 
-    if "leben" in message.content.lower() and "universum" in message.content.lower() and "alles in message.content.lower()":
+    if "leben" in message.content.lower() and "universum" in message.content.lower() and "alles" in message.content.lower():
         response = "42"
         await message.channel.send(response)
         return
@@ -73,23 +77,31 @@ async def on_ready():
 
 @client.event
 async def on_message(message):
-    if message.author == client.user:
-        return
-
-    if config_data["bot"]["channel"] in message.channel.name:
-        await getMessageForMainBotChannel(message)
-    else:
-        await getMessageForAllOtherChannels(message)
-
-    
-
-@client.event
-async def on_error(event, *args, **kwargs):
-    with open('err.log', 'a') as f:
-        if event == 'on_message':
-            f.write(f'Unhandled message: {args[0]}\n')
+    global client
+    try:
+        if message.author == client.user:
+            return
+            
+        if message.content.lower().startswith("!char"):
+            await handleCharacterCommand(message)
+        elif config_data["bot"]["channel"] in message.channel.name:
+            await getMessageForMainBotChannel(message)
         else:
-            raise
+            await getMessageForAllOtherChannels(message)
+    except Exception as e:
+        errorchannel = client.get_channel(1015922839817297980)
+        await errorchannel.send(''.join(tb.format_exception(None, e, e.__traceback__)))
+
+#@client.event
+#async def on_error(event, *args, **kwargs):
+#    print(event)
+#    print(args)
+#    print(kwargs)
+#    with open('err.log', 'a') as f:
+#        if event == 'on_message':
+#            f.write(f'Unhandled message: {args[0]}\n')
+#        else:
+#            raise
 
 client.run(TOKEN)
 
