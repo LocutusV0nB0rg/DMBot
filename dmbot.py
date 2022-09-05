@@ -15,6 +15,7 @@ with open('bot.yml', 'r') as file:
     config_data = yaml.safe_load(file)
 
 TOKEN = config_data["bot"]["token"]
+log_channel = config_data["bot"]["logchannel"]
 
 client = discord.Client()
 
@@ -65,7 +66,7 @@ async def getMessageForMainBotChannel(message):
 
 async def getMessageForAllOtherChannels(message):
     if "dice" in message.content.lower():
-        number= random.randint(1, 20)
+        number = random.randint(1, 20)
         response = f"```markdown\n# {number}\nDetails:[d20 ({number})]```"
         await message.channel.send(response)
         return
@@ -81,7 +82,7 @@ async def on_message(message):
     try:
         if message.author == client.user:
             return
-            
+        
         if message.content.lower().startswith("!char"):
             await handleCharacterCommand(message)
         elif config_data["bot"]["channel"] in message.channel.name:
@@ -89,7 +90,7 @@ async def on_message(message):
         else:
             await getMessageForAllOtherChannels(message)
     except Exception as e:
-        errorchannel = client.get_channel(1015922839817297980)
+        errorchannel = client.get_channel(log_channel)
         await errorchannel.send(''.join(tb.format_exception(None, e, e.__traceback__)))
 
 #@client.event

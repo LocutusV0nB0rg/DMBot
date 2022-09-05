@@ -18,11 +18,12 @@ In dem Verzeichnis vom Bot muss eine Datei bot.yml angelegt werden, die die Konf
 bot:
     token: "bot.auth.token"
     channel: "General"
+	logchannel: 0123456789
     
 roles:
     dungeon_master: "Almighty DM"
 ```
 
-Danach müssen die in der dependencies.py angegebenen Python-Module installiert werden. Ich empfehle pip für diesen Schritt.
+Danach müssen die in der dependencies.txt angegebenen Python-Module installiert werden. Ich empfehle pip für diesen Schritt.
 
 Anschließend kann der Bot mit `python3 dmbot.py` gestartet werden.

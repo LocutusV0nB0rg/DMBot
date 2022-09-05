@@ -39,9 +39,7 @@ class Character(JsonObject):
 
     def delete(self):
         global characters
-        print(characters)
         characters.remove(self)
-        print(characters)
         
         if not os.path.exists('characterdata'):
             os.mkdir('characterdata')
@@ -201,6 +199,11 @@ def getCharacterWithRandomValues(name):
     return newCharacter
 
 def parseOperationValue(stringOperand):
+    if len(stringOperand.split(" ")) == 2:
+        splitOperand = stringOperand.split(" ")
+        value = int(splitOperand[1])
+        return "SET", splitOperand[0], value
+    
     if not "+" in stringOperand and not "-" in stringOperand:
         return None
 
@@ -218,25 +221,50 @@ def parseOperationValue(stringOperand):
     return splitOperand[0], int(splitOperand[1]), value
 
 async def applyOperation(character, operationValue, channel):
-    attr = operationValue[0].upper()
-    editValue = operationValue[1] * operationValue[2]
-    if attr == "STR":
-        character.strength += editValue
-    elif attr == "GES":
-        character.agility += editValue
-    elif attr == "KON":
-        character.perserverance += editValue
-    elif attr == "INT":
-        character.intelligence += editValue
-    elif attr == "WIS":
-        character.wisdom += editValue
-    elif attr == "CHA":
-        character.charisma += editValue
-    elif attr == "MTL":
-        character.mentality += editValue
-    character.saveCharacterToFile()
-    updateAllCharactersFromFiles()
-    await sendMessageToChannel(channel, f"```\nDer Wert {attr} von {character.name} wurde um {editValue} angepasst.\n```")
+
+    if operationValue[0].upper() == "SET":
+        print(operationValue)
+
+        attr = operationValue[1].upper()
+        editValue = operationValue[2]
+        if attr == "STR":
+            character.strength = editValue
+        elif attr == "GES":
+            character.agility = editValue
+        elif attr == "KON":
+            character.perserverance = editValue
+        elif attr == "INT":
+            character.intelligence = editValue
+        elif attr == "WIS":
+            character.wisdom = editValue
+        elif attr == "CHA":
+            character.charisma = editValue
+        elif attr == "MTL":
+            character.mentality = editValue
+
+        character.saveCharacterToFile()
+        updateAllCharactersFromFiles()
+        await sendMessageToChannel(channel, f"```\nDer Wert {attr} von {character.name} wurde auf {editValue} gesetzt.\n```")
+    else:
+        attr = operationValue[0].upper()
+        editValue = operationValue[1] * operationValue[2]
+        if attr == "STR":
+            character.strength += editValue
+        elif attr == "GES":
+            character.agility += editValue
+        elif attr == "KON":
+            character.perserverance += editValue
+        elif attr == "INT":
+            character.intelligence += editValue
+        elif attr == "WIS":
+            character.wisdom += editValue
+        elif attr == "CHA":
+            character.charisma += editValue
+        elif attr == "MTL":
+            character.mentality += editValue
+        character.saveCharacterToFile()
+        updateAllCharactersFromFiles()
+        await sendMessageToChannel(channel, f"```\nDer Wert {attr} von {character.name} wurde um {editValue} angepasst.\n```")
     
 
 async def executeOperationWithChar(character, remainingOperands, channel):
@@ -301,6 +329,15 @@ async def executeOperationWithChar(character, remainingOperands, channel):
         await sendMessageToChannel(channel, f'```\nDer Übungsbonus "{desc}" wurde dem Character {character.name} wieder genommen.\n```')
         return
 
+    if remainingOperands[0].lower().startswith("hitpoints "):
+        joined = " -".join(remainingOperands)
+        joined = joined[len("hitpoints "):]
+        index = int(joined)
+        character.hitpoints = index
+        character.saveCharacterToFile()
+        await sendMessageToChannel(channel, f'```\nDer Character {character.name} hat nun {index} Hitpoints.\n```')
+        return
+
     if len(remainingOperands) == 1:
         soleOp = remainingOperands[0].lower()
         if soleOp == "showinv":
@@ -331,6 +368,32 @@ async def executeOperationWithChar(character, remainingOperands, channel):
             character.delete()
             await sendMessageToChannel(channel, f"```\nDer Character {character.name} wurde permanent gelöscht.\n```")
             return
+        if remainingOperands[0] == "roll":
+            attr = remainingOperands[1].upper()
+            value = 10
+            if attr == "STR":
+                value = character.strength
+            elif attr == "GES":
+                value = character.agility
+            elif attr == "KON":
+                value = character.perserverance
+            elif attr == "INT":
+                value = character.intelligence
+            elif attr == "WIS":
+                value = character.wisdom
+            elif attr == "CHA":
+                value = character.charisma
+            elif attr == "MTL":
+                value = character.mentality
+            else:
+                await sendMessageToChannel(channel, f'```\nWarnung! Das Attribut "{attr} wurde nicht gefunden."\n```')
+
+            bonus = calculateBonus(value)
+            nat = random.randint(1, 20)
+            rolled = nat + bonus
+            await sendMessageToChannel(channel, f"```markdown\n# {rolled} ({nat})\nWurf eines D20 mit einem Bonus von {bonus} für {attr}\n```")
+            
+            
         
 async def displayHelp(channel):
     await sendMessageToChannel(channel, """
@@ -355,10 +418,14 @@ Befehle:
 !char -<Name> -practiceadd <Beschreibung> -<Wert> | Fügt einen Übungsbonus zum Character hinzu
 !char -<Name> -practiceremove <Position> | Entfernt einen Übungsbonus wieder
 
-Charaktereigenschaften können mit "!char -<Name> <Kürzel>+-<Wert>" verändert werden, z.B.:
+Charaktereigenschaften können mit "!char -<Name> -<Kürzel>+-<Wert>" verändert werden, z.B.:
 !char -Tobey -STR+2 (Erhöht Stärke um 2)
 !char -Tobey -MTL-1 (Verringert Mentality um 1)
+Sie können auch direkt mit "!char -<Name> -<Kürzel> <Wert> gesetzt werden.
 Die Kürzel sind in den Characterübersichten aufgeführt.
+
+!char -<Name> -hitpoints <Wert> | Setzt die Hitpoints des Characters auf den gegebenen Wert
+!char -<Name> -roll -<Kürzel> | Würfelt einen D20 mit dem Bonus des angegebenen Kürzels
 
 ```
 """)
