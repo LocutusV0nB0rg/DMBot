@@ -17,7 +17,7 @@ with open('bot.yml', 'r') as file:
 TOKEN = config_data["bot"]["token"]
 log_channel = config_data["bot"]["logchannel"]
 
-intents = discord.Intents.default()
+intents = discord.Intents.all()
 client = discord.Client(command_prefix='.',intents=intents)
 
 def isDungeonMaster(member):
