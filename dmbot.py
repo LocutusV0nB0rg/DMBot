@@ -18,7 +18,7 @@ TOKEN = config_data["bot"]["token"]
 log_channel = config_data["bot"]["logchannel"]
 
 intents = discord.Intents.default()
-client = discord.Client(intent=intents)
+client = discord.Client(command_prefix='.',intents=intents)
 
 def isDungeonMaster(member):
     for role in member.roles:
