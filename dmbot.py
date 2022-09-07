@@ -68,15 +68,18 @@ async def getMessageForMainBotChannel(message):
 async def getMessageForAllOtherChannels(message):
     
     if "characterdice" in message.content.lower():
-        numbers = [random.randint(1, 6) for i in range(4)]
-        actual = numbers
-        for num in actual:
-            if min(actual) == num:
-                actual.remove(num)
-                break
-    
-        relevant_sum = int(sum(actual))
-        response = f"```markdown\n# {relevant_sum}\nDetails:[4d6 ({actual[0]}, {actual[1]}, {actual[2]}, [{min(numbers)}])]```"
+        response = ""
+        for k in range(7):
+            numbers = [random.randint(1, 6) for i in range(4)]
+            actual = numbers
+            for num in actual:
+                if min(actual) == num:
+                    actual.remove(num)
+                    break
+        
+            relevant_sum = int(sum(actual))
+            response += f"```markdown\n# {relevant_sum}\nDetails:[4d6 ({actual[0]}, {actual[1]}, {actual[2]}, [{min(numbers)}])]```"
+
         await message.channel.send(response)
     elif "dice" in message.content.lower():
         number = random.randint(1, 20)
